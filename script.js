@@ -200,8 +200,6 @@ btnLogin.addEventListener('click', function (e) {
       options
     ).format(now);
 
-  
-
     // Clear input field
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
