@@ -207,7 +207,7 @@ const startLogOutTimer = function () {
 };
 
 //**********************  Event Handler  **********************//
-let currentAccount;
+let currentAccount, timer;
 
 // currentAccount = account1;
 // updateUI(currentAccount);
