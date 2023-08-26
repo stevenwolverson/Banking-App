@@ -149,7 +149,6 @@ const calcDisplaySummary = function (acc) {
     })
     .reduce((acc, int) => acc + int, 0);
   labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
-  // labelSumInterest.textContent = `${interest.toFixed(2)}MYR`;
   console.log(acc);
 };
 
