@@ -83,12 +83,12 @@ const formatMovementDate = function (date, locale) {
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
 
-  return new Intl.DateTimeFormat(locale).format(date);
-
   // const day = `${date.getDate()}`.padStart(2, 0);
   // const month = `${date.getMonth() + 1}`.padStart(2, 0);
   // const year = date.getFullYear();
   // return `${day}/${month}/${year}`;
+
+  return new Intl.DateTimeFormat(locale).format(date);
 };
 
 const formatCur = function (value, locale, currency) {
@@ -127,6 +127,12 @@ const displayMovement = function (acc, sort = false) {
   });
 };
 
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((init, mov) => (init += mov), 0);
+
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
+};
+
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
@@ -149,12 +155,6 @@ const calcDisplaySummary = function (acc) {
   labelSumInterest.textContent = formatCur(interest, acc.locale, acc.currency);
   // labelSumInterest.textContent = `${interest.toFixed(2)}MYR`;
   console.log(acc);
-};
-
-const calcDisplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce((init, mov) => (init += mov), 0);
-
-  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
 
 const createUsername = function (accs) {
@@ -203,15 +203,12 @@ const startLogOutTimer = function () {
   // Call the timer every second
   tick();
   const timer = setInterval(tick, 1000);
+
   return timer;
 };
 
 //**********************  Event Handler  **********************//
 let currentAccount, timer;
-
-// currentAccount = account1;
-// updateUI(currentAccount);
-// containerApp.style.opacity = 1;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -220,6 +217,7 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
+  console.log(currentAccount);
 
   if (currentAccount?.pin === +inputLoginPin.value) {
     // Display UI and Welcome Message
@@ -229,7 +227,7 @@ btnLogin.addEventListener('click', function (e) {
 
     containerApp.style.opacity = 1;
 
-    // day/month/year
+    // Create current date and time
     const now = new Date();
     const options = {
       hour: 'numeric',
@@ -260,7 +258,7 @@ btnLogin.addEventListener('click', function (e) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
-  const amount = inputTransferAmount.value;
+  const amount = +inputTransferAmount.value;
   const receiverAcc = accounts.find(
     acc => acc.username === inputTransferTo.value
   );
